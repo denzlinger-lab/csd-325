@@ -42,7 +42,7 @@ FIRE_CHANCE = 0.01  # Chance a tree is hit by lightning & burns.
 PAUSE_LENGTH = 0.5
 
 # New function to check if coordinates are within lake boundary
-def is_in_lake(x, y):
+def isInLake(x, y):
     return (LAKE_X_START <= x <= LAKE_X_END) and \
         (LAKE_Y_START <= y <= LAKE_Y_END)
 
@@ -65,12 +65,12 @@ def main():
                     # previous iteration, just do nothing here:
                     continue
 
+                # This function basically says if the current spot is
+                # water, leave it alone
                 # Gemini called this a 'Runtime Check'
-                # Basically says if the current spot is water, leave it alone
                 if forest[(x, y)] == WATER:
                     nextForest[(x, y)] = WATER
                     continue
-                # -----------------------------
 
                 if ((forest[(x, y)] == EMPTY)
                         and (random.random() <= GROW_CHANCE)):
@@ -90,7 +90,7 @@ def main():
 
                             # Fire spreads to neighboring trees
                             # Leaves water alone
-                            if (forest.get((nx, ny)) == TREE) and (not is_in_lake(nx, ny)):
+                            if (forest.get((nx, ny)) == TREE) and (not isInLake(nx, ny)):
                                 nextForest[(nx, ny)] = FIRE
                     # The tree has burned down now, so erase it:
                     nextForest[(x, y)] = EMPTY
@@ -108,9 +108,9 @@ def createNewForest():
     for x in range(WIDTH):
         for y in range(HEIGHT):
             # Checks position against lake boundary
-            if is_in_lake(x, y):
-                forest[(x, y)] = WATER  # Start as water.
-            # ------------------------------------
+            # If within boundary, start as water
+            if isInLake(x, y):
+                forest[(x, y)] = WATER
             elif (random.random() * 100) <= INITIAL_TREE_DENSITY:
                 forest[(x, y)] = TREE  # Start as a tree.
             else:
